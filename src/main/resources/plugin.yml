@@ -1,0 +1,7 @@
+name: ClientComms
+version: '${project.version}'
+main: xyz.ds.clientcomms.ClientComms
+api-version: 1.8.8
+commands:
+  decrypt:
+    description: Test Decrypt Command
