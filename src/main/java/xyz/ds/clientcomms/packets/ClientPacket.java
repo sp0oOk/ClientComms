@@ -9,7 +9,7 @@ import java.io.Serializable;
 @ToString
 public abstract class ClientPacket implements Serializable {
 
-    public transient short protocolVersion;
+    public transient short protocolVersion = 2;
 
     @Override
     public boolean equals(Object o) {

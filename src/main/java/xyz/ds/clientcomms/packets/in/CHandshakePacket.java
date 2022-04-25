@@ -1,0 +1,22 @@
+package xyz.ds.clientcomms.packets.in;
+
+import com.google.gson.annotations.SerializedName;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import xyz.ds.clientcomms.packets.ClientPacket;
+
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
+public class CHandshakePacket extends ClientPacket {
+
+    @SerializedName(value = "handshake")
+    private final String handshake;
+
+    @SerializedName(value = "version")
+    private final String version;
+
+}

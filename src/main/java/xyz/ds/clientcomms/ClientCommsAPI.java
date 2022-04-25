@@ -1,26 +1,43 @@
 package xyz.ds.clientcomms;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import xyz.ds.clientcomms.struct.ChannelParticipator;
-import xyz.ds.clientcomms.struct.QueuedMessage;
+import lombok.Getter;
+import xyz.ds.clientcomms.manager.PacketManager;
+import xyz.ds.clientcomms.messages.QueuedMessage;
+import xyz.ds.clientcomms.utils.DecryptUtils;
+import xyz.ds.clientcomms.utils.RSACrypt;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Base64;
+import java.util.LinkedList;
 
 public class ClientCommsAPI {
 
-    private static final Map<ChannelParticipator, List<QueuedMessage>> queuedMessages = Maps.newHashMap();
+    @Getter
+    private static final LinkedList<QueuedMessage> queuedMessages = new LinkedList<>();
+    public static String CHANNEL = "cosmic";
+    public static DecryptUtils decrypt;
+    public static String sessionKey =
+            "13c9esdEOtLC+JPE+GaWFcF86+MqlLoLaY6yRedTwUp3Fx1NFWDwPnBYjCb3Y83yPV8rujPeaCkARIabBx5Ca+J7FstlvlUN2+j5WpCSFUFDvqjw2KG0k6/WoABk1aHQi0n/sypTUB6ZkG2JnyuaNTQh2ebhc5yMIdeAViwIcyW4t3I5p7+VYjcq9YBX4CfKRJjSZaVyJIFBHouCndqlNicc4PvKcmTnYwj66h6rI4t5Iq97ticrbvXdZifre9IGcVLVhOIpCtiXoLBA06t6beLFhOF8OatYVu86CXvT0TBUaidS2NO+l7Qqk4m9k2fDENna2zpOe237XLBm7uKviA==";
+    private static PacketManager packetManager;
 
-    public static Map<ChannelParticipator, List<QueuedMessage>> getQueuedMessages() {
-        return queuedMessages;
+    static {
+        byte[] b = new byte[0];
+        try {
+            b = RSACrypt.a(Base64.getDecoder().decode(sessionKey));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        decrypt = new DecryptUtils(b, true);
     }
 
-    public static void addQueuedMessage(ChannelParticipator participator, QueuedMessage message) {
-        List<QueuedMessage> messages = Lists.newArrayList();
-        if(queuedMessages.containsKey(participator)) messages = queuedMessages.get(participator);
-        messages.add(message);
-        if(!queuedMessages.containsKey(participator)) queuedMessages.put(participator, messages);
+    public static void addQueuedMessage(QueuedMessage message) {
+        queuedMessages.add(message);
+    }
+
+    public static PacketManager getPacketManager() {
+        if (packetManager == null) {
+            packetManager = new PacketManager();
+        }
+        return packetManager;
     }
 
 }
