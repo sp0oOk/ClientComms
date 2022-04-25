@@ -13,8 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-public class HitSplash
-        implements Serializable {
+public class HitSplash implements Serializable {
     long time;
     @SerializedName(value = "entityId")
     private int entityId;

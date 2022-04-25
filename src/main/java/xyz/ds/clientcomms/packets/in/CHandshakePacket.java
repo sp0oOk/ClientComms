@@ -17,6 +17,6 @@ public class CHandshakePacket extends ClientPacket {
     private final String handshake;
 
     @SerializedName(value = "version")
-    private final String version;
+    public final String version;
 
 }

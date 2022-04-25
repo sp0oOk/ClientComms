@@ -1,0 +1,13 @@
+messages:
+  handshake:
+    - ""
+    - "&a&l(!) &aThanks for using &nCosmic Client&r"
+    - "&7You will now receive a range of game-changing buffs"
+    - "&7these include, but are not limited to:"
+    - ""
+    - "&f- &b1.5x EXP Boost"
+    - "&f- &dCustom Skins"
+    - "&f- &cVoice Chat"
+    - "&7... and much more!"
+    - ""
+  faction-ping-location: ""

@@ -23,10 +23,8 @@ public class PacketManager {
         register(CChunkDataRequestPacket.class);
         register(CClaimCoordPacket.class);
         register(CCooldownRequestPacket.class);
-//        register(CEmptyPacket.class);
         counter++;
         register(CFactionInfoRequestPacket.class);
-//        register(CEmptyPacket.class);
         counter++;
         register(CHandshakePacket.class);
         register(CInfoPacket.class);
@@ -73,7 +71,6 @@ public class PacketManager {
         register(SHitSplatPacket.class);
         register(SHideNametags.class);
         register(CWorldNameRequestPacket.class);
-//        register(SEmptyPacket.class);
         counter++;
         register(SShowXPBarPacket.class);
         register(SAddXPPacket.class);
@@ -85,7 +82,6 @@ public class PacketManager {
         register(SSetMapImagePacket.class);
         register(SSetEntityProperties.class);
         register(CMobHelperStatusPacket.class);
-//        register(SEmptyPacket.class);
         counter++;
         register(SSetBlockProperties.class);
         register(SScoreboardPacket.class);
@@ -101,18 +97,47 @@ public class PacketManager {
 
     }
 
+    /**
+     * Registers Packets and adds them to a map for
+     * referencing and obtaining a certain packet from the packetID
+     * @param packet Packet Object
+     */
+
     public void register(Class<? extends ClientPacket> packet) {
         this.counter = (short) (this.counter + 1);
         this.packets.put(this.counter, packet);
     }
 
+    /**
+     * Obtains the packetID for a passed {@link ClientPacket} object
+     * used for referencing.
+     * @param packet Packet Object
+     * @return {@link Short} packetID (identifier)
+     */
+
     public short getPacketId(ClientPacket packet) {
         return packets.inverse().get(packet.getClass());
     }
 
+    /**
+     * Obtains the packetID for a passed class extending {@link ClientPacket}
+     * used for referencing
+     * @param klass Class extending {@link ClientPacket}
+     * @return {@link Short} packetID (identifier)
+     */
+
     public short getPacketId(Class<? extends ClientPacket> klass) {
         return packets.inverse().get(klass);
     }
+
+    /**
+     * Constructs a {@link CosmicPacket} object off of the passed {@link ClientPacket} and
+     * proceeds to convert it to JSON, than "chunks" the packet (to prevent rate-limits/data-loss)
+     * and passes it to a {@link QueuedMessage} object where it is converted/encrypted to bytes and queued,
+     * later sent to the player.
+     * @param player Player Object
+     * @param packet Packet Object
+     */
 
     public void sendPacket(Player player, ClientPacket packet) {
 
@@ -141,6 +166,12 @@ public class PacketManager {
         }
 
     }
+
+    /**
+     * Obtains a Custom Packet Class from a provided packetID (identifier)
+     * @param packetID packetID {identifier}
+     * @return Class extending {@link ClientPacket}
+     */
 
     public Class<? extends ClientPacket> fromId(short packetID) {
         return packets.get(packetID);

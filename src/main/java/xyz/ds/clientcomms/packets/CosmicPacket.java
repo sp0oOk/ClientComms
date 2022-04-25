@@ -27,11 +27,19 @@ public class CosmicPacket implements Serializable {
     @SerializedName(value = "content")
     public String content;
 
+    /**
+     * Builds Packet (encrypts)
+     */
+
     public void build() {
         PacketManager packetManager = ClientCommsAPI.getPacketManager();
         if (packetManager.getPacketId(SKeepAlive.class) == packetID) return;
         content = Base64.getEncoder().encodeToString(ClientCommsAPI.decrypt.b(content.getBytes(StandardCharsets.UTF_8), true));
     }
+
+    /**
+     * Unpacks Packet (decrypts)
+     */
 
     public void unpack() {
         PacketManager packetManager = ClientCommsAPI.getPacketManager();

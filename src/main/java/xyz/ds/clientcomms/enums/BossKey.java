@@ -1,5 +1,6 @@
 package xyz.ds.clientcomms.enums;
 
+@SuppressWarnings("unused")
 public enum BossKey {
     AETHER_IRON_GOLEM_BOSS,
     AETHER_BLAZE,

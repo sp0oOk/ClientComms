@@ -3,3 +3,7 @@ version: '${project.version}'
 main: xyz.ds.clientcomms.ClientComms
 api-version: 1.8.8
 commands:
+  comms:
+    description: Analytics Command For Client Comms
+    aliases: [clientcomms]
+    permission: clientcomms.admin
