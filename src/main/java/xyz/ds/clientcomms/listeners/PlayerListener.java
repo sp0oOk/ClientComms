@@ -25,9 +25,6 @@ public class PlayerListener implements Listener {
         PacketManager manager = ClientCommsAPI.getPacketManager();
         Player p = event.getPlayer();
         manager.sendPacket(p, new SKeepAlive(ClientCommsAPI.sessionKey));
-        Bukkit.getScheduler().scheduleSyncDelayedTask(ClientComms.getInstance(), () -> {
-            manager.sendPacket(p, new SFeatureSetPacket("COSMICPVP"));
-        }, 40L);
     }
 
     /**

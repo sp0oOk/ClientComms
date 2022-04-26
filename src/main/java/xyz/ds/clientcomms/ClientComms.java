@@ -18,6 +18,7 @@ import xyz.ds.clientcomms.packets.ClientPacket;
 import xyz.ds.clientcomms.packets.CosmicPacket;
 import xyz.ds.clientcomms.packets.in.CHandshakePacket;
 import xyz.ds.clientcomms.packets.in.CPermissionRequestPacket;
+import xyz.ds.clientcomms.packets.out.SFeatureSetPacket;
 import xyz.ds.clientcomms.packets.out.SPermissionResponsePacket;
 import xyz.ds.clientcomms.packets.out.SSetWorldNamePacket;
 import xyz.ds.clientcomms.tasks.ProcessOutgoingMessagesTask;
@@ -101,11 +102,15 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
         final Player player = Bukkit.getPlayer(uuid);
         if(player == null || !(player.isOnline())) return;
         ClientCommsAPI.getRegisteredPlayers().put(uuid, packet.version);
+        final PacketManager manager = ClientCommsAPI.getPacketManager();
+        Bukkit.getScheduler().scheduleSyncDelayedTask(ClientComms.getInstance(), () -> {
+            manager.sendPacket(player, new SFeatureSetPacket("COSMICPVP"));
+        }, 40L);
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             ClientCommsAPI.HANDSHAKE_MESSAGE.forEach(player::sendMessage);
             player.setMetadata("cosmicClient", new FixedMetadataValue(this, packet.version));
             ClientCommsAPI.sendDefaultPermissions(player);
-        }, 40L);
+        }, 60L);
     }
 
     /**

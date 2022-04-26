@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import xyz.ds.clientcomms.ClientComms;
 import xyz.ds.clientcomms.ClientCommsAPI;
 import xyz.ds.clientcomms.packets.CosmicPacket;
+import xyz.ds.clientcomms.utils.GsonAdapter;
 
 import java.nio.charset.StandardCharsets;
 
@@ -17,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 @Setter
 public class QueuedMessage {
 
-    private static GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping();
+    private final Gson gson = new GsonBuilder().disableHtmlEscaping().setVersion(1.3).registerTypeHierarchyAdapter(byte[].class, new GsonAdapter()).create();
 
     private Player player;
     private CosmicPacket packet;
@@ -29,7 +30,6 @@ public class QueuedMessage {
 
     public void send() {
         packet.build();
-        Gson gson = gsonBuilder.create();
         player.sendPluginMessage(ClientComms.getInstance(), ClientCommsAPI.CHANNEL, gson.toJson(packet).getBytes(StandardCharsets.UTF_8));
     }
 }
