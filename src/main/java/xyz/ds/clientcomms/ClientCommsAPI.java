@@ -1,14 +1,11 @@
 package xyz.ds.clientcomms;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import xyz.ds.clientcomms.manager.PacketManager;
 import xyz.ds.clientcomms.messages.QueuedMessage;
 import xyz.ds.clientcomms.packets.ClientPacket;
-import xyz.ds.clientcomms.packets.out.SEmotesResponsePacket;
 import xyz.ds.clientcomms.packets.out.SPermissionResponsePacket;
 import xyz.ds.clientcomms.utils.ColorUtils;
 import xyz.ds.clientcomms.utils.DecryptUtils;
@@ -25,7 +22,7 @@ public class ClientCommsAPI {
     private static final Map<UUID, String> registeredPlayers = Maps.newHashMap();
     public static String CHANNEL = "cosmic";
     public static DecryptUtils decrypt;
-    public static String sessionKey = "13c9esdEOtLC+JPE+GaWFcF86+MqlLoLaY6yRedTwUp3Fx1NFWDwPnBYjCb3Y83yPV8rujPeaCkARIabBx5Ca+J7FstlvlUN2+j5WpCSFUFDvqjw2KG0k6/WoABk1aHQi0n/sypTUB6ZkG2JnyuaNTQh2ebhc5yMIdeAViwIcyW4t3I5p7+VYjcq9YBX4CfKRJjSZaVyJIFBHouCndqlNicc4PvKcmTnYwj66h6rI4t5Iq97ticrbvXdZifre9IGcVLVhOIpCtiXoLBA06t6beLFhOF8OatYVu86CXvT0TBUaidS2NO+l7Qqk4m9k2fDENna2zpOe237XLBm7uKviA==";
+    public static String sessionKey = "UCSyivBpQPL4vkntTOyKw6jq40hmKfafjEfb82StqpNDZXgJ22J/TGMMVWM4uBxnGKy3fRf4G+DB+q3SWEDag5AgXDW+c9RQJtnqSGMvLJx+ikjpm0vE6WdU95BdwMWgo85sCvYhACQVTNx7rlCCyClJysCxVGvUHGosyS8R5ijsqqpzL4ZYxK/4p6RTl10onUQgYmhahyfpYOc7HvuevM5UBxBAy/6KtOJks3d+oEs59uSgWv27qYqXEfZnn6cOjeguf6chRZcMciHkWiLrSpr+RKh6GVNR1KZ2IGLk5iHcLzxXRcpJp3SfIG1nDRuRnq12nFeQpBjxOjFc375MiQ==";
     private static PacketManager packetManager;
 
     static {

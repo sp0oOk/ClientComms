@@ -17,10 +17,7 @@ import xyz.ds.clientcomms.packets.ClientPacket;
 import xyz.ds.clientcomms.packets.CosmicPacket;
 import xyz.ds.clientcomms.packets.in.CHandshakePacket;
 import xyz.ds.clientcomms.packets.in.CPermissionRequestPacket;
-import xyz.ds.clientcomms.packets.out.SFeatureSetPacket;
-import xyz.ds.clientcomms.packets.out.SPermissionResponsePacket;
-import xyz.ds.clientcomms.packets.out.SSetWorldNamePacket;
-import xyz.ds.clientcomms.packets.out.SWorldBorderResponsePacket;
+import xyz.ds.clientcomms.packets.out.*;
 import xyz.ds.clientcomms.tasks.ProcessOutgoingMessagesTask;
 
 import java.io.File;
@@ -30,9 +27,11 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
 
     private static ClientComms clientComms;
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+    private long epoch;
 
     @Override
     public void onEnable() {
+        epoch = System.currentTimeMillis() / 1000;
         clientComms = this;
         final File config = new File(getDataFolder(), "config.yml");
         if(!config.exists()) saveDefaultConfig();
@@ -84,6 +83,7 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
                 case "CPermissionRequestPacket":
                     handlePermission(player, (CPermissionRequestPacket) packet);
                     break;
+                case "CStatusPacket":
                 case "CWorldNameRequestPacket":
                     assert player != null;
                     packetManager.sendPacket(player, new SSetWorldNamePacket(player.getWorld().getName(), null, (byte) 0, (byte) 0));
@@ -92,6 +92,11 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
                     assert player != null;
                     final double sizeOfBorder = player.getWorld().getWorldBorder().getSize();
                     packetManager.sendPacket(player, new SWorldBorderResponsePacket((int) sizeOfBorder, (int) sizeOfBorder, (int) sizeOfBorder, player.getWorld().getWorldBorder().getCenter().getBlockX(), player.getWorld().getWorldBorder().getCenter().getBlockZ(), null));
+                    break;
+                case "CTimeRequestPacket":
+                    assert player != null;
+                    packetManager.sendPacket(player, new STimeResponsePacket((System.currentTimeMillis() / 1000) - epoch));
+                    break;
             }
         }
     }
