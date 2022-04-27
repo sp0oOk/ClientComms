@@ -22,7 +22,7 @@ public class ClientCommsAPI {
     private static final Map<UUID, String> registeredPlayers = Maps.newHashMap();
     public static String CHANNEL = "cosmic";
     public static DecryptUtils decrypt;
-    public static String sessionKey = "UCSyivBpQPL4vkntTOyKw6jq40hmKfafjEfb82StqpNDZXgJ22J/TGMMVWM4uBxnGKy3fRf4G+DB+q3SWEDag5AgXDW+c9RQJtnqSGMvLJx+ikjpm0vE6WdU95BdwMWgo85sCvYhACQVTNx7rlCCyClJysCxVGvUHGosyS8R5ijsqqpzL4ZYxK/4p6RTl10onUQgYmhahyfpYOc7HvuevM5UBxBAy/6KtOJks3d+oEs59uSgWv27qYqXEfZnn6cOjeguf6chRZcMciHkWiLrSpr+RKh6GVNR1KZ2IGLk5iHcLzxXRcpJp3SfIG1nDRuRnq12nFeQpBjxOjFc375MiQ==";
+    public static String sessionKey = "UHF9waNgFRUxz658NIpOj55WQgGrwmIQhtPep9gqW5ECmaHrck2jwhQV6tYGw6s8hQ+pRXaRlBnyImKWLNSWvfhyHnofFBt9h8qJE0XsFhSFb4mquE9xH8stsKPTMAgFy+DZ/ZiokgtBCf5dQHJMmTmgRgtl3XWAfxvGf53Pd6qMKZ/yR4/CVjlCkZE962XDNUhaGrMZB6056ZSiAw3mKEbkqfaFsWZ49jX1n6sADrLJwmga1hUL2dZxE/ZkN3xdIvEY9Atp23S9kQkqPyXZ3Unxz1YGSkikzHVNcHQceHsD1o9bnut+UvFDvn5vSW34bLj8Quuha5DgevRu/rrBvw==";
     private static PacketManager packetManager;
 
     static {

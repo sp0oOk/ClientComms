@@ -21,18 +21,19 @@ import xyz.ds.clientcomms.packets.out.*;
 import xyz.ds.clientcomms.tasks.ProcessOutgoingMessagesTask;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public final class ClientComms extends JavaPlugin implements PluginMessageListener {
 
     private static ClientComms clientComms;
-    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-    private long epoch;
+    private final Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
     @Override
     public void onEnable() {
-        epoch = System.currentTimeMillis() / 1000;
         clientComms = this;
+
         final File config = new File(getDataFolder(), "config.yml");
         if(!config.exists()) saveDefaultConfig();
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
@@ -40,6 +41,7 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "cosmic");
         Bukkit.getMessenger().registerIncomingPluginChannel(this, "cosmic", this);
         new ProcessOutgoingMessagesTask().runTaskTimerAsynchronously(this, 1L, 1L);
+
     }
 
     @Override
@@ -86,16 +88,21 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
                 case "CStatusPacket":
                 case "CWorldNameRequestPacket":
                     assert player != null;
-                    packetManager.sendPacket(player, new SSetWorldNamePacket(player.getWorld().getName(), null, (byte) 0, (byte) 0));
+                    packetManager.sendPacket(player, new SSetWorldNamePacket(player.getWorld().getName(), new ArrayList<>(), (byte) 0, (byte) 0));
                     break;
                 case "CWorldBorderRequestPacket":
                     assert player != null;
                     final double sizeOfBorder = player.getWorld().getWorldBorder().getSize();
-                    packetManager.sendPacket(player, new SWorldBorderResponsePacket((int) sizeOfBorder, (int) sizeOfBorder, (int) sizeOfBorder, player.getWorld().getWorldBorder().getCenter().getBlockX(), player.getWorld().getWorldBorder().getCenter().getBlockZ(), null));
+                    packetManager.sendPacket(player, new SWorldBorderResponsePacket((int) sizeOfBorder, (int) sizeOfBorder, (int) sizeOfBorder, player.getWorld().getWorldBorder().getCenter().getBlockX(), player.getWorld().getWorldBorder().getCenter().getBlockZ(),
+                            new ArrayList<>()));
                     break;
                 case "CTimeRequestPacket":
                     assert player != null;
-                    packetManager.sendPacket(player, new STimeResponsePacket((System.currentTimeMillis() / 1000) - epoch));
+                    packetManager.sendPacket(player, new STimeResponsePacket(System.currentTimeMillis()));
+                    break;
+                case "CChunkDataRequestPacket":
+                    // no clue
+                    assert player != null;
                     break;
             }
         }
@@ -118,6 +125,7 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
             ClientCommsAPI.HANDSHAKE_MESSAGE.forEach(player::sendMessage);
             player.setMetadata("cosmicClient", new FixedMetadataValue(this, packet.version));
             ClientCommsAPI.sendDefaultPermissions(player);
+            manager.sendAll(new SPlayerHeadersPacket(new HashMap<>(), false));
         }, 60L);
     }
 
