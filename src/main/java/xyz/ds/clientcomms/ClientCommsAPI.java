@@ -1,11 +1,14 @@
 package xyz.ds.clientcomms;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import xyz.ds.clientcomms.manager.PacketManager;
 import xyz.ds.clientcomms.messages.QueuedMessage;
 import xyz.ds.clientcomms.packets.ClientPacket;
+import xyz.ds.clientcomms.packets.out.SEmotesResponsePacket;
 import xyz.ds.clientcomms.packets.out.SPermissionResponsePacket;
 import xyz.ds.clientcomms.utils.ColorUtils;
 import xyz.ds.clientcomms.utils.DecryptUtils;
@@ -73,6 +76,7 @@ public class ClientCommsAPI {
         packetManager.sendPacket(player, new SPermissionResponsePacket("op", player.hasPermission("ranks.operator")));
         packetManager.sendPacket(player, new SPermissionResponsePacket("interstellar", player.hasPermission("ranks.interstellar")));
         packetManager.sendPacket(player, new SPermissionResponsePacket("banteam", player.hasPermission("ranks.banteam")));
+        //packetManager.sendPacket(player, new SEmotesResponsePacket(Sets.newHashSet("default", "thinking", "infinite_dab", "hype", "take_the_l", "shrug", "twerk", "orange_justice", "electro_shuffle", "poltergeist", "gangnam_style", "star_power", "boneless", "stuffed", "jig", "flirt", "clickclack", "corona", "best_mates", "spooky_skeleton", "turkey_vibes", "salty")));
     }
 
 }

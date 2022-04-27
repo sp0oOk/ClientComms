@@ -1,6 +1,5 @@
 package xyz.ds.clientcomms;
 
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
@@ -21,6 +20,7 @@ import xyz.ds.clientcomms.packets.in.CPermissionRequestPacket;
 import xyz.ds.clientcomms.packets.out.SFeatureSetPacket;
 import xyz.ds.clientcomms.packets.out.SPermissionResponsePacket;
 import xyz.ds.clientcomms.packets.out.SSetWorldNamePacket;
+import xyz.ds.clientcomms.packets.out.SWorldBorderResponsePacket;
 import xyz.ds.clientcomms.tasks.ProcessOutgoingMessagesTask;
 
 import java.io.File;
@@ -75,6 +75,7 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
             data.unpack();
             Class<? extends ClientPacket> packetType = ClientCommsAPI.getPacketManager().fromId(data.packetID);
             ClientPacket packet = gson.fromJson(data.content, packetType);
+            final PacketManager packetManager = ClientCommsAPI.getPacketManager();
             switch (packetType.getSimpleName()) {
                 case "CHandshakePacket":
                     assert player != null;
@@ -84,9 +85,13 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
                     handlePermission(player, (CPermissionRequestPacket) packet);
                     break;
                 case "CWorldNameRequestPacket":
-                    final PacketManager packetManager = ClientCommsAPI.getPacketManager();
                     assert player != null;
-                    packetManager.sendPacket(player, new SSetWorldNamePacket(player.getWorld().getName(), Lists.newArrayList(), (byte) player.getWorld().getMaxHeight(), (byte) 0));
+                    packetManager.sendPacket(player, new SSetWorldNamePacket(player.getWorld().getName(), null, (byte) 0, (byte) 0));
+                    break;
+                case "CWorldBorderRequestPacket":
+                    assert player != null;
+                    final double sizeOfBorder = player.getWorld().getWorldBorder().getSize();
+                    packetManager.sendPacket(player, new SWorldBorderResponsePacket((int) sizeOfBorder, (int) sizeOfBorder, (int) sizeOfBorder, player.getWorld().getWorldBorder().getCenter().getBlockX(), player.getWorld().getWorldBorder().getCenter().getBlockZ(), null));
             }
         }
     }
@@ -103,9 +108,7 @@ public final class ClientComms extends JavaPlugin implements PluginMessageListen
         if(player == null || !(player.isOnline())) return;
         ClientCommsAPI.getRegisteredPlayers().put(uuid, packet.version);
         final PacketManager manager = ClientCommsAPI.getPacketManager();
-        Bukkit.getScheduler().scheduleSyncDelayedTask(ClientComms.getInstance(), () -> {
-            manager.sendPacket(player, new SFeatureSetPacket("COSMICPVP"));
-        }, 40L);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(ClientComms.getInstance(), () -> manager.sendPacket(player, new SFeatureSetPacket("COSMICPVP")), 40L);
         Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
             ClientCommsAPI.HANDSHAKE_MESSAGE.forEach(player::sendMessage);
             player.setMetadata("cosmicClient", new FixedMetadataValue(this, packet.version));
