@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.ds.clientcomms.ClientCommsAPI;
 import xyz.ds.clientcomms.messages.QueuedMessage;
@@ -168,7 +169,19 @@ public class PacketManager {
     }
 
     /**
+     * Sends the {@link ClientPacket} object to all online players
+     *
+     * @param packet Packet Object
+     */
+    public void sendAll(ClientPacket packet) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            sendPacket(player, packet);
+        }
+    }
+
+    /**
      * Obtains a Custom Packet Class from a provided packetID (identifier)
+     *
      * @param packetID packetID {identifier}
      * @return Class extending {@link ClientPacket}
      */
